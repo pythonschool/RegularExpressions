@@ -1,6 +1,6 @@
 #!/usr/local/bin/python3
 
-import cgi
+import cgi, re
 
 def html_top():
     print("""Content-type:text/html\n\n
@@ -27,6 +27,13 @@ def get_booking_details():
     date_in = form_data.getvalue("date_in")
     date_out = form_data.getvalue("date_out")
     return first_name, last_name,street, town, postcode, phone, car, date_in, date_out
+
+def validate_form_field(field,regex):
+    if re.match(regex,field,re.VERBOSE):
+        return True
+    else:
+        return False
+
 
 #main program
 if __name__ == "__main__":
