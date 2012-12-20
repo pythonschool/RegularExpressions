@@ -108,6 +108,31 @@ def validate_car_registration(car):
 
     return validate_form_field(car,regex)
 
+def create_form(first_name, last_name,
+                street, town, postcode,phone,
+                car, date_in, date_out,
+                post_code_valid=None,phone_valid=None,car_valid=None):
+    form = """
+            <form method="post" action="process_form.cgi">
+            <h1>Car Park Booking Form</h1>
+            First name: <input type="text" name="first_name" placeholder="e.g. John" value="{0}" /><br/>
+            Last name: <input type="text" name="last_name" placeholder="e.g. Bain" value="{1}"/><br/>
+            Street address: <input type="text" name="street" placeholder="e.g. 5 Ormond Way" value="{2}"/><br/>
+            Town: <input type="text" name="town" placeholder="e.g. Dunkeld" value="{3}"/><br/>
+            Post code: <input type="text" name="postcode" placeholder="e.g. PH15 6SJ" value="{4}"/>{9}<br/>
+            Telphone number: <input type="tel" name="phone" placeholder="e.g. (01123) 438672" value="{5}"/>{10}<br/>
+            Car registration: <input type="text" name="car" placeholder="e.g. SJ10SPL" value="{6}"/>{11}<br/>
+            <br />
+            Date in: <input type="date" name="date_in" placeholder="e.g. 2012-12-20" value="{7}"/><br/>
+            Date out: <input type="datetime" name="date_out" placeholder="e.g. 2012-12-28" value="{8}"/><br/>
+            <br/>
+            <input type="submit" name="submit" value="Submit Booking"/>
+                        </form>
+            """.format(first_name, last_name,
+                street, town, postcode,phone,
+                car, date_in, date_out,
+                post_code_valid, phone_valid, car_valid)
+    return form
 
 
 #main program
@@ -115,15 +140,14 @@ if __name__ == "__main__":
     try:
         html_top()
         first_name, last_name, street, town, postcode,phone, car, date_in, date_out = get_booking_details()
-        print("{0}<br/>".format(first_name))
-        print("{0}<br/>".format(last_name))
-        print("{0}<br/>".format(street))
-        print("{0}<br/>".format(town))
-        print("{0}, <b>post code is valid</b>: {1}<br/>".format(postcode,validate_post_code(postcode)))
-        print("{0}, <b>phone number is valid</b>: {1}<br/>".format(phone,validate_telephone_number(phone)))
-        print("{0}, <b>car registration is valid</b>: {1}<br/>".format(car,validate_car_registration(car)))
-        print("{0}<br/>".format(date_in))
-        print("{0}<br/>".format(date_out))
+        post_code_valid = validate_post_code(postcode)
+        phone_valid = validate_telephone_number(phone)
+        car_valid = validate_car_registration(car)
+        form = create_form(first_name, last_name,
+                street, town, postcode,phone,
+                car, date_in, date_out,
+                post_code_valid,phone_valid,car_valid)
+        print(form)
         html_tail()
     except:
         cgi.print_exception()
