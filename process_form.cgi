@@ -111,6 +111,14 @@ def create_form(first_name="", last_name="",
                 street="", town="", postcode="",phone="",
                 car="", date_in="", date_out="",
                 post_code_valid="",phone_valid="",car_valid=""):
+    #work out whether to display "invalid" or not
+    validation_indicators = []
+    for validation in [post_code_valid,phone_valid,car_valid]:
+        if not validation:
+            validation_indicators.append("Invalid")
+        else:
+            validation_indicators.append("")
+    
     form = """
             <form method="post" action="process_form.cgi">
             <h1>Car Park Booking Form</h1>
@@ -130,7 +138,7 @@ def create_form(first_name="", last_name="",
             """.format(first_name, last_name,
                 street, town, postcode,phone,
                 car, date_in, date_out,
-                post_code_valid, phone_valid, car_valid)
+                validation_indicators[0], validation_indicators[1], validation_indicators[2])
     return form
 
 
@@ -147,11 +155,14 @@ if __name__ == "__main__":
             post_code_valid = validate_post_code(postcode)
             phone_valid = validate_telephone_number(phone)
             car_valid = validate_car_registration(car)
-            #generate form
-            form = create_form(first_name, last_name,
-                street, town, postcode,phone,
-                car, date_in, date_out,
-                post_code_valid,phone_valid,car_valid)
+            if post_code_valid and phone_valid and car_valid:
+                form = "Your booking has been successful!"
+            else:
+                #generate form to show invalid data
+                form = create_form(first_name, last_name,
+                    street, town, postcode,phone,
+                    car, date_in, date_out,
+                    post_code_valid,phone_valid,car_valid)
         else:
             #new blank form
             form = create_form()       
