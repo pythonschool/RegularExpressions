@@ -86,6 +86,28 @@ def validate_telephone_number(phone):
                )$"""
     return validate_form_field(phone,regex)
 
+def validate_car_registration(car):
+    regex = """
+               [A-Z]            #single letter
+                                #followed by either:
+               (
+                   (
+                       [A-Z]    #single letter
+                       \d{2}    #2 digits
+                   |            #or
+                       \d{1,3}  #between 1 and 3 digits
+                   )
+                                #followed by:
+                   [A-Z]{3}     #3 letters
+               |                #or
+                   [A-Z]{2}     #two letters
+                   \d{1,3}      #between 1 and 3 digits
+                   [A-Z]?       #zero or one letters
+               )$
+            """
+
+    return validate_form_field(car,regex)
+
 
 
 #main program
@@ -99,7 +121,7 @@ if __name__ == "__main__":
         print("{0}<br/>".format(town))
         print("{0}, <b>post code is valid</b>: {1}<br/>".format(postcode,validate_post_code(postcode)))
         print("{0}, <b>phone number is valid</b>: {1}<br/>".format(phone,validate_telephone_number(phone)))
-        print("{0}<br/>".format(car))
+        print("{0}, <b>car registration is valid</b>: {1}<br/>".format(car,validate_car_registration(car)))
         print("{0}<br/>".format(date_in))
         print("{0}<br/>".format(date_out))
         html_tail()
