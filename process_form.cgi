@@ -15,8 +15,7 @@ def html_tail():
     print("""    </body>
     </html>""")
 
-def get_booking_details():
-    form_data = cgi.FieldStorage()
+def get_booking_details(form_data):
     first_name = form_data.getvalue("first_name")
     last_name = form_data.getvalue("last_name")
     street = form_data.getvalue("street")
@@ -108,10 +107,10 @@ def validate_car_registration(car):
 
     return validate_form_field(car,regex)
 
-def create_form(first_name, last_name,
-                street, town, postcode,phone,
-                car, date_in, date_out,
-                post_code_valid=None,phone_valid=None,car_valid=None):
+def create_form(first_name="", last_name="",
+                street="", town="", postcode="",phone="",
+                car="", date_in="", date_out="",
+                post_code_valid="",phone_valid="",car_valid=""):
     form = """
             <form method="post" action="process_form.cgi">
             <h1>Car Park Booking Form</h1>
@@ -139,14 +138,23 @@ def create_form(first_name, last_name,
 if __name__ == "__main__":
     try:
         html_top()
-        first_name, last_name, street, town, postcode,phone, car, date_in, date_out = get_booking_details()
-        post_code_valid = validate_post_code(postcode)
-        phone_valid = validate_telephone_number(phone)
-        car_valid = validate_car_registration(car)
-        form = create_form(first_name, last_name,
+        form_data = cgi.FieldStorage()
+        #find out if there is anything in the post variable
+        if len(form_data.keys()) > 0:
+            #pre-existing form
+            first_name, last_name, street, town, postcode,phone, car, date_in, date_out = get_booking_details(form_data)
+            #validate 
+            post_code_valid = validate_post_code(postcode)
+            phone_valid = validate_telephone_number(phone)
+            car_valid = validate_car_registration(car)
+            #generate form
+            form = create_form(first_name, last_name,
                 street, town, postcode,phone,
                 car, date_in, date_out,
                 post_code_valid,phone_valid,car_valid)
+        else:
+            #new blank form
+            form = create_form()       
         print(form)
         html_tail()
     except:
