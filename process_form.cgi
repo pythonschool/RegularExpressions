@@ -111,10 +111,9 @@ def create_form(first_name="", last_name="",
                 street="", town="", postcode="",phone="",
                 car="", date_in="", date_out="",
                 post_code_valid="",phone_valid="",car_valid=""):
-    #work out whether to display "invalid" or not
     validation_indicators = []
     for validation in [post_code_valid,phone_valid,car_valid]:
-        if not validation:
+        if validation == False:
             validation_indicators.append("Invalid")
         else:
             validation_indicators.append("")
